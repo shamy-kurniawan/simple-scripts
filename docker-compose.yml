@@ -1,0 +1,19 @@
+services:
+  zerotier:
+    image: zerotier/zerotier:latest
+    container_name: zerotier-one
+    devices:
+      - /dev/net/tun
+    network_mode: host
+    volumes:
+      - './config:/var/lib/zerotier-one'
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    command: ${ZEROTIER_NETWORK_ID}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "zerotier-cli", "info"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
